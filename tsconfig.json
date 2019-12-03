@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "paths": {
+      "@Src/*": [
+        "./src/*"
+      ],
+      "@App/*": [
+        "./src/app/*"
+      ],
+      "@Helper/*": [
+        "./src/helper/*"
+      ],
+      "@Common/*": [
+        "./src/common/*"
+      ],
+      "@Protocol/*": [
+        "./protocol/*"
+      ],
+      "@Resource/*": [
+        "./resource/*"
+      ],
+      "@Log/*": [
+        "./src/common/module/log/*"
+      ],
+      "@Config/*": [
+        "./src/common/module/config/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
