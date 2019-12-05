@@ -15,10 +15,28 @@ $ npm install
 $ npm run start
 
 # watch mode
-$ npm run start:dev
+$ npm run dev
 
 # production mode
 $ npm run start:prod
+```
+
+## Build
+```bash
+# build app
+$ npm run build
+
+# build docker
+$ npm run build:docker
+
+# build proto buffer
+$ npm run build:protocol
+
+# pm2 
+$ npm run startup/stop/restart
+
+# pm2 in docker
+$ npm run startup:docker
 ```
 
 ## Test
