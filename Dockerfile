@@ -1,9 +1,8 @@
 FROM registry.cn-hangzhou.aliyuncs.com/medlinker/node:10.16
-#FROM node:10-alpine
 
 LABEL maintainer="yuezhiming@medlinker.com"
 
-ENV APP_NAME "panel-node-gateway"
+ENV APP_NAME "nest-template"
 ENV APP_ROOT /var/www
 ENV APP_PATH $APP_ROOT/$APP_NAME
 ENV LOG_ROOT /var/log/medlinker
@@ -28,4 +27,4 @@ EXPOSE 8080
 RUN echo "$APP_PATH/dockerfiles/serve.sh" >> /bin/serve.sh \
     && chmod a+x /bin/serve.sh
 
-CMD ["npm","run","startup:docker"]
+# CMD ["npm","run","startup:docker"]

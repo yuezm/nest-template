@@ -1,3 +1,5 @@
+import { Server } from 'http';
+import ErrnoException = NodeJS.ErrnoException;
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, SwaggerBaseConfig, SwaggerDocument } from '@nestjs/swagger';
@@ -34,15 +36,28 @@ async function bootstrap() {
   app.useLogger(app.get('LogService'));
   app.use(helmet());
   app.use(cookieParse('session-secret'));
+
   await app.listen(ConfigService.get('HTTP_PORT'));
+  httpListening(app.getHttpServer(), ConfigService.get('HTTP_PORT'));
 }
 
-// -------------------------------- 启动日志 --------------------------------
-bootstrap().then(() => {
-  Logger.log(`启动成功，监听端口：0.0.0.0:${ConfigService.get('HTTP_PORT')}`);
-}).catch(reason => {
-  Logger.log(reason);
-});
+function httpListening(server: Server, port: number) {
+  server.on('error', (err: ErrnoException) => {
+    // 端口重复监听错误
+    if (err.code === 'EADDRINUSE' && process.env.NODE_ENV !== 'production') {
+      Logger.warn(`端口重复监听：${ port }`);
+      server.listen(++port);
+    } else {
+      Logger.error(err);
+    }
+  });
+
+  server.on('listening', () => {
+    Logger.log(`启动成功，监听：0.0.0.0:${ port }`);
+  });
+}
+
+bootstrap();
 
 // -------------------------------- 错误处理 --------------------------------
 process.on('unhandledRejection', err => {
@@ -50,6 +65,7 @@ process.on('unhandledRejection', err => {
 });
 
 process.on('uncaughtException', err => {
+  // 终止服务，让pm2重启
   Logger.error(err);
   process.exit(1);
 });
