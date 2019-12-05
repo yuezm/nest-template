@@ -23,53 +23,56 @@ export function transToGoogleType(value: number | string | boolean): object {
   return isEmpty(value) ? null : { value };
 }
 
-/**
- * 将其他时间格式转为13位时间戳
- * 将时间对象格式化
- * 将时间格式字符串转为13位时间戳
- * 将10位时间戳转为13位时间戳，如果时间戳已为13位，概不负责
- */
+// 将其他时间格式转为13位时间戳，请注意是毫秒级时间戳！！！
 export function transDateToTimestamp(date: string | number | Date): number {
-  if (!date || date <= 0) {
+  if (isEmpty(date)) {
     return;
   }
+
   if (typeof date === 'object') {
     return date.getTime();
   }
 
-  return typeof date === 'number' ? date * 1000 : new Date(date).getTime();
+  if (typeof date === 'string') {
+    return new Date(date).getTime();
+  }
+
+  return date <= 0 ? undefined :
+    date < 9999999999 ?
+      date * 1000 : date;
 }
 
-/**
- * 将其他时间格式转为时间字符串
- * 将时间对象格式化
- * 将时间格式字符串格式化（主要目的为去除毫秒和时区）
- * 将时间戳为格式化
- * 10位（秒时间戳）最大值 9999999999 到2286年了，足矣
- */
+// 将其他时间格式转为时间字符串，YYYY-MM-DD HH:mm:ss
 export function transDateToDateString(date: number | string | Date): string {
-  if (!date || date <= 0) {
+  if (isEmpty(date)) {
     return;
   }
 
   // 检测 numeric 类型
   if (!Number.isNaN(Number(date))) {
-    date = Number(date);
-  }
 
-  if (typeof date === 'number' && date < 9999999999) {
-    date *= 1000;
+    if (date <= 0) {
+      return;
+    }
+
+    date = Number(date);
+
+    if (date < 9999999999) {
+      date *= 1000;
+    }
   }
 
   return dayJs(date).format('YYYY-MM-DD HH:mm:ss');
 }
 
 // 格式化数字货币（将分表示转换为元表示，tips 实在不知道"元"用什么英文单词）
-export function transPriceToYuan(price: number) {
-  if (isEmpty(price)) {
-    return undefined;
-  }
-  return (price / 100).toFixed(2);
+export function transPriceToYuan(price: number): string | null {
+  return isEmpty(price) ? null : (price / 100).toFixed(2);
+}
+
+// 将JSON形式字符串转为JSON
+export function transStringToJson(data: string): object | null {
+  return isEmpty(data) ? null : JSON.parse(data);
 }
 
 // ------------------------------ 数据格式化 ------------------------------
