@@ -43,19 +43,19 @@ export class LogService implements LoggerService {
     });
   }
 
-  log(message: ErrorType) {
+  log(message: ErrorType): void {
     this.logger.info(LogService.serialize(message));
   }
 
-  warn(message: ErrorType) {
+  warn(message: ErrorType): void {
     this.logger.warn(LogService.serialize(message));
   }
 
-  error(message: ErrorType) {
+  error(message: ErrorType): void {
     this.logger.error(LogService.serialize(message));
   }
 
-  debug(message: ErrorType) {
+  debug(message: ErrorType): void {
     this.logger.debug(LogService.serialize(message));
   }
 
@@ -65,7 +65,7 @@ export class LogService implements LoggerService {
     }
 
     if (msg instanceof Error) {
-      return msg.toString();
+      return msg.stack;
     }
 
     return JSON.stringify(msg);

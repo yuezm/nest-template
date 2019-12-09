@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-  checkLogin() {
+  checkLogin(): boolean {
     return true;
   }
 }

@@ -4,24 +4,27 @@
  * 如果config.ts 与 .env 属性名重复，则以.env为准
  */
 import { join } from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { parse } from 'dotenv';
 
 import defaultConfig from '@Src/config';
 
-const config: any = Object.assign(
-  defaultConfig,
-  parse(readFileSync(join(process.cwd(), '.env'))),
+const envPath = join(process.cwd(), '.env');
+const config: any = Object.freeze(
+  Object.assign(
+    defaultConfig,
+    existsSync(envPath) ? parse(readFileSync(envPath)) : null,
+  ),
 );
 
 @Injectable()
 export class ConfigService {
-  get(key: string) {
+  get(key: string): any {
     return ConfigService.get(key);
   }
 
-  static get(key: string) {
-    return config[ key ] || process.env[ key ];
+  static get(key: string): any {
+    return config.hasOwnProperty(key) ? config[ key ] : process.env[ key ];
   }
 }

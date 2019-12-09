@@ -26,8 +26,8 @@ export function ValidateIfNotEmpty(): (object: object, propertyName: string) => 
  * @ResponseSerialize(ResponseDto)
  * index(){...}
  */
-export function ResponseSerialize<T>(cls: ClassType<T>, isSwaggerResponse: boolean = false): MethodDecorator {
-  return (target, propertyKey, descriptor: TypedPropertyDescriptor<any>) => {
+export function ResponseSerialize<T>(cls: ClassType<T>, isSwaggerResponse = false): MethodDecorator {
+  return (target, propertyKey, descriptor: TypedPropertyDescriptor<any>): void => {
     if (isSwaggerResponse) {
       ApiOkResponse({ type: cls })(target, propertyKey, descriptor);
     }
