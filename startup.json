@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "nest-template",
+      "name": "<%= name %>",
       "script": "dist/main.js",
       "instances": 1,
       "env": {
