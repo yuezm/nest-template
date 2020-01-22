@@ -9,7 +9,7 @@ export interface IResponseInterceptor {
 
 // 用户信息接口
 export interface IUserInfo {
-  userId: number;
+  userId?: number;
   role?: number;
   name?: string;
 }
