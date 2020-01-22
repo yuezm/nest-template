@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { Injectable, LoggerService } from '@nestjs/common';
-import { createLogger, format, transports } from 'winston';
+import { Injectable, Logger } from '@nestjs/common';
+import { createLogger, format, transports, Logger as WinstonLogger } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import * as dayJs from 'dayjs';
 
@@ -10,53 +10,68 @@ const { combine, printf } = format;
 
 export type ErrorType = Error | string | object;
 
+const winstonLogger: WinstonLogger = createLogger({
+  format: combine(
+    printf(
+      // 日志信息格式化
+      info => `${ dayJs().format('YYYY-MM-DD HH:mm:ss') } [${ info.level.toUpperCase() }]  ${ info.message }`,
+    ),
+  ),
+  transports: [
+    // 控制台配置
+    new transports.Console({
+      level: ConfigService.get('LOG_CMD_LEVEL'),
+      handleExceptions: true,
+    }),
+
+    // 日志文件配置
+    new DailyRotateFile({
+      level: ConfigService.get('LOG_FILE_LEVEL'),
+      filename: join(ConfigService.get('LOG_PATH'), '%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false, // 是否压缩日志文件
+      maxSize: '200m',
+      maxFiles: '30d',
+    }),
+  ],
+});
+
 @Injectable()
-export class LogService implements LoggerService {
-
-  private readonly logger;
-
-  constructor() {
-    this.logger = createLogger({
-      format: combine(
-        printf(
-          // 日志信息格式化
-          info => `${ dayJs().format('YYYY-MM-DD HH:mm:ss') } [${ info.level.toUpperCase() }]  ${ info.message }`,
-        ),
-      ),
-      transports: [
-        // 控制台配置
-        new transports.Console({
-          level: 'debug',
-          handleExceptions: true,
-        }),
-
-        // 日志文件配置
-        new DailyRotateFile({
-          level: 'warn',
-          filename: join(ConfigService.get('LOG_PATH'), '%DATE%.log'),
-          datePattern: 'YYYY-MM-DD',
-          zippedArchive: false, // 是否压缩日志文件
-          maxSize: '200m',
-          maxFiles: '30d',
-        }),
-      ],
-    });
+export class LogService {
+  static debug(message: ErrorType, on = false): void {
+    if (on) {
+      LogService.info(message);
+    } else {
+      winstonLogger.debug(LogService.serialize(message));
+    }
   }
 
-  log(message: ErrorType): void {
-    this.logger.info(LogService.serialize(message));
+  debug(message: ErrorType, on = false): void {
+    LogService.debug(message, on);
+  }
+
+  static info(message: ErrorType): void {
+    winstonLogger.info(LogService.serialize(message));
+  }
+
+  info(message: ErrorType): void {
+    LogService.info(message);
+  }
+
+  static warn(message: ErrorType): void {
+    winstonLogger.warn(LogService.serialize(message));
   }
 
   warn(message: ErrorType): void {
-    this.logger.warn(LogService.serialize(message));
+    LogService.warn(message);
+  }
+
+  static error(message: ErrorType): void {
+    winstonLogger.error(LogService.serialize(message));
   }
 
   error(message: ErrorType): void {
-    this.logger.error(LogService.serialize(message));
-  }
-
-  debug(message: ErrorType): void {
-    this.logger.debug(LogService.serialize(message));
+    LogService.error(message);
   }
 
   private static serialize(msg: ErrorType): string {
@@ -71,3 +86,5 @@ export class LogService implements LoggerService {
     return JSON.stringify(msg);
   }
 }
+
+Logger.log('LogService加载成功');

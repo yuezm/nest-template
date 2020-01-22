@@ -2,6 +2,7 @@
  * 启动脚本 启动之前需要加载或者执行的程序
  */
 import { addAliases } from 'module-alias';
+import { Logger } from '@nestjs/common';
 
 const cwd = process.cwd();
 
@@ -16,3 +17,5 @@ addAliases({
   '@Resource': `${ cwd }/resource`,
   '@Public': `${ cwd }+/public`,
 });
+
+Logger.log('启动项加载成功');

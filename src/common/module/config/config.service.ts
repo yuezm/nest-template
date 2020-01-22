@@ -5,17 +5,16 @@
  */
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { parse } from 'dotenv';
 
 import defaultConfig from '@Src/config';
 
 const envPath = join(process.cwd(), '.env');
-const config: any = Object.freeze(
-  Object.assign(
-    defaultConfig,
-    existsSync(envPath) ? parse(readFileSync(envPath)) : null,
-  ),
+
+const config: object = Object.assign(
+  defaultConfig,
+  existsSync(envPath) ? parse(readFileSync(envPath)) : null,
 );
 
 @Injectable()
@@ -28,3 +27,5 @@ export class ConfigService {
     return config.hasOwnProperty(key) ? config[ key ] : process.env[ key ];
   }
 }
+
+Logger.log('ConfigService加载成功');
