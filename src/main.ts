@@ -1,15 +1,15 @@
 import { Server } from 'http';
-import ErrnoException = NodeJS.ErrnoException;
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, SwaggerBaseConfig } from '@nestjs/swagger';
 import * as cookieParse from 'cookie-parser';
 import * as helmet from 'helmet';
+import ErrnoException = NodeJS.ErrnoException;
 
-import './boot';
-import { AppModule } from '@App/app.module';
-
+import './boot'; // !!!启动脚本必须置于首位!!!
 import { ConfigService } from '@Config/config.service';
+import { AppModule } from '@App/app.module';
+import { LogService } from '@Log/log.service';
 
 function httpListening(server: Server, port: number): void {
   server.on('error', (err: ErrnoException) => {
@@ -29,7 +29,6 @@ function httpListening(server: Server, port: number): void {
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
-    logger: new Logger(),
   });
 
   //  -------------------------------- 配置swagger文档 --------------------------------
@@ -51,19 +50,22 @@ async function bootstrap(): Promise<void> {
   app.use(helmet());
   app.use(cookieParse('session-secret'));
 
+  // -------------------------------- 启动及启动错误捕获 --------------------------------
+
   await app.listen(ConfigService.get('HTTP_PORT'));
   httpListening(app.getHttpServer(), ConfigService.get('HTTP_PORT'));
 }
 
-bootstrap();
-
 // -------------------------------- 错误处理 --------------------------------
+
 process.on('unhandledRejection', err => {
-  Logger.warn(err as Error);
+  LogService.warn(err as Error);
 });
 
 process.on('uncaughtException', err => {
   // 终止服务，让pm2重启
-  Logger.error(err);
+  LogService.error(err);
   process.exit(1);
 });
+
+bootstrap();

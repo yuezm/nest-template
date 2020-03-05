@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('user test', () => {
     it('should return "hello,nest"', () => {
-      expect(userController.test()).toBe('hello,nest');
+      expect(userController.test(undefined)).toBe('hello,nest');
     });
   });
 });

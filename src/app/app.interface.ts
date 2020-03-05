@@ -15,12 +15,12 @@ export interface IUserInfo {
 }
 
 // 请求对象接口扩展
-export class IRequest extends Request {
+export interface IRequest extends Request {
+  requestId: string;
   userInfo?: IUserInfo;
-  cookies?: object; // cookie-parser 的cookie赋值，但是貌似cookie-parser内未声明
 }
 
-// 枚举注释接口
+// 枚举注释
 export interface IComment {
   description: string;
   enum: any[];
