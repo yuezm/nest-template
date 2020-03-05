@@ -25,7 +25,7 @@ export class ResponseInterceptor implements NestInterceptor {
       .pipe(
         map<any, IResponseInterceptor>(
           value => {
-            LogService.info(`Leave Service: requestId=${ req.requestId }`);
+            LogService.info(`Leave Server: requestId=${ req.requestId }`);
 
             const cls = this.reflector.get(RESPONSE_SERIALIZE, context.getHandler());
             // 凡是不含 RESPONSE_SERIALIZE 的，则认为需要自己序列化返回值

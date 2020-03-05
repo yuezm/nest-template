@@ -29,7 +29,6 @@ function httpListening(server: Server, port: number): void {
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
-    logger: false,
   });
 
   //  -------------------------------- 配置swagger文档 --------------------------------

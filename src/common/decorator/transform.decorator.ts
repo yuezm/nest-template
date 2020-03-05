@@ -29,7 +29,7 @@ export function ValidateIfNotEmpty(): (object: object, propertyName: string) => 
 export function ResponseSerialize<T>(cls: ClassType<T>, isSwaggerResponse = false): MethodDecorator {
   return (target, propertyKey, descriptor: TypedPropertyDescriptor<any>): void => {
     if (isSwaggerResponse) {
-      ApiOkResponse({ type: cls })(target, propertyKey, descriptor);
+        ApiOkResponse({ type: cls })(target, propertyKey, descriptor);
     }
     Reflect.defineMetadata(RESPONSE_SERIALIZE, cls, descriptor.value);
   };

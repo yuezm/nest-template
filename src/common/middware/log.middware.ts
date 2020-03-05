@@ -9,7 +9,7 @@ export class LogMiddleWare implements NestMiddleware {
   use(req: IRequest, res: Response, next: () => void): any {
     req.requestId = uuid();
 
-    LogService.info(`Enter Service: requestId=${ req.requestId }, path=${ req.url }, method=${ req.method }, params=${ JSON.stringify((req as any).query) }, body=${ JSON.stringify(req.body) }`);
+    LogService.info(`Enter Server: requestId=${ req.requestId }, path=${ req.url }, method=${ req.method }, params=${ JSON.stringify((req as any).query) }, body=${ JSON.stringify(req.body) }`);
 
     next();
   }

@@ -17,10 +17,10 @@ import { LogMiddleWare } from '@Common/middware/log.middware';
     UserModule,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuards,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuards,
+    // },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
