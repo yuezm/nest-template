@@ -4,5 +4,5 @@ export default {
   RPC_PORT: 8000,
 
   LOG_CMD_LEVEL: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-  LOG_FILE_LEVEL: process.env.NODE_ENV === 'production' ? 'warn' : 'info',
+  LOG_FILE_LEVEL: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
 };

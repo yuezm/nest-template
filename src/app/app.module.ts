@@ -4,23 +4,22 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AllExceptionFilter } from '@Common/filter/all.exception.filter';
 import { ResponseInterceptor } from '@Common/interceptor/response.interceptor';
 import { AuthGuards } from '@Common/guards/auth.guards';
+import { LogMiddleWare } from '@Common/middware/log.middware';
 
 import { UserModule } from './user/user.module';
-import { LogModule } from '@Log/log.module';
-import { LogMiddleWare } from '@Common/middware/log.middware';
+import { TestModule } from '@App/test/test.module';
 
 @Global()
 @Module({
   imports: [
-    LogModule,
-
     UserModule,
+    TestModule,
   ],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuards,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuards,
+    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
@@ -41,7 +40,6 @@ import { LogMiddleWare } from '@Common/middware/log.middware';
     },
   ],
   exports: [
-    LogModule,
   ],
 })
 export class AppModule implements NestModule {

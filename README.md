@@ -47,80 +47,142 @@ $ npm run test:cov
 
 ### 目录
 
-1. src/app 存放于业务模块，文件按业务拆分，**该项目文件未按照角色拆分，而是按照模块拆分，即同模块下，controller、service、module、dto、dto、static 存在一处**
+#### src
 
-   - \*.controller.ts: 控制器，负责数据校验，数据组装，**不负责重逻辑，重逻辑请放置于 service!!!**
-   - \*.service.ts: 主要业务逻辑处理
-   - \*.dto.ts: 向前端接收的数据实体
-   - \*.do.ts: 向服务端（数据库）接收的数据实体
-   - \*.static.ts: 当前模块下的枚举，接口定义
+存放源码
 
-2. src/common 存放公用包
+##### src/app
 
-   - decorator: 通用装饰器
-     - common.decorator.ts: 通用装饰器文件
-     - transform.decorator.ts: 负责数据实体转换、类型校验等的装饰器文件
-     - user.decorator.ts: 负责用户信息设置、获取、权限设置等的装饰器文件
-   - filter: 通用异常过滤器
-   - guards: 通用守卫
-     - auth.guards.ts: 登录权限守卫
-     - role.guards.ts: 角色权限守卫
-   - interceptor: 通用拦截器
-     - response.interceptor.ts: 返回值统一格式组装，使用方法: `@ResponseSerialize(*.Dto)`，tips，ResponseSerialize 接收第二个参数，如果为 true，则代表生成 swagger 的`ApiOkResponse()`
-   - middware: 通用中间件
-     - log.middware.ts: 服务入口通用日志打印
-   - module: 通用模块
-     - log 模块: 日志打印模块 ==> log.service.ts
-     - config 模块: 服务配置 ==> config.service.ts
+src/app 存放于业务模块，文件按业务拆分，**该项目文件未按照角色拆分，而是按照业务模块拆分，即同模块下，controller、service、module、dto、dto、static 存在一处**
 
-3. src/config: 系统配置文件。**请注意，该处只放置通用配置，对不同环境配置或敏感信息配置 不要放在此处!!!，请在配置工程目录中配置环境变量!!!**
+- \*.controller.ts: 控制器，负责数据校验，数据组装，**不负责重逻辑，重逻辑请放置于 service!!!**
+- \*.service.ts: 主要业务逻辑处理
+- \*.dto.ts: 向前端接收的数据实体
+- \*.do.ts: 向服务端（数据库）接收的数据实体
+- \*.static.ts: 当前模块下的枚举，接口定义
 
-4. src/helper: 工具函数，**增加工具函数，请增加测试!!!**
+tips: 如果业务模块过于复杂，可以再进行拆分，如下所示
 
-5. src/boot.ts: 启动前脚本，为在启动服务前需要执行的脚本
+```
+- test
+  - test1
+    - test1.controller.ts
+    - test1.service.ts
+    ...
+  - test2
+    - test1.controller.ts
+    - test1.service.ts
+    ...
 
-6. main.ts 入口文件
+  test.module.ts
+```
 
-   - 加载启动前脚本
-   - 执行引导
-   - HTTP 启动时，端口占用处理
-   - 全局错误捕获
+##### src/common
+
+存放公用包，如 nest 定义的不同角色的模块
+
+- decorator: 通用装饰器
+
+  - common.decorator.ts: 通用装饰器文件
+  - transform.decorator.ts: 负责数据实体转换、类型校验等的装饰器文件
+  - user.decorator.ts: 负责用户信息设置、获取、权限设置等的装饰器文件
+
+- filter: 通用异常过滤器
+
+  - all.exception.filter.ts: 通用所有异常捕获
+
+- guards: 通用守卫
+
+  - auth.guards.ts: 登录权限守卫
+  - role.guards.ts: 角色权限守卫
+
+- interceptor: 通用拦截器
+
+  - response.interceptor.ts: 返回值统一格式序列化，使用方法，如下所示
+
+  ```
+  class TestController{
+
+    @Get('/')
+    @ResponseSerialize(*.Dto, true);
+    index(){
+      //
+    }
+  }
+  ```
+
+  tips: ResponseSerialize 接收第二个参数，如果为 true，则代表生成 swagger 的`ApiOkResponse()`，详细可查看 _transform.decorator.ts_
+
+* middware: 通用中间件
+
+  - log.middware.ts: 服务入口通用日志打印
+
+* module: 通用模块
+  - log 模块: 日志打印模块 ==> log.service.ts
+  - config 模块: 服务配置 ==> config.service.ts
+
+##### src/config
+
+系统配置文件
+
+##### src/helper
+
+工具函数，**增加工具函数，请增加测试!!!**
+
+##### src/boot.ts
+
+启动前脚本，为在启动服务前需要执行的脚本
+
+##### main.ts
+
+入口文件
+
+- 加载启动前脚本
+- 执行引导
+- HTTP 启动时，端口占用处理
+- 错误捕获
 
 ### 命名
 
-1. 文件夹命名: 文件夹命名统一小写，如果存在多单词，则使用*短横线*连接，例如`user-detail`
-2. 文件命名: 文件名统一小写，且按照角色命名，如果存在多单词，则使用*.*连接，例如 `user.controller.ts、user.detail.controller.ts`
+1. 文件夹命名: 文件夹命名统一小写，如果存在多单词，则使用*短横线*连接，例如 _user-detail_
+2. 文件命名: 文件名统一小写，且按照角色命名，如果存在多单词，则使用 "." 连接，例如 _user.controller.ts、user.detail.controller.ts_
 3. class 命名: 采用大驼峰结构
 4. 方法命名: 采用小驼峰结构
-5. 枚举内部: 必须采用**大写字母**，或大写字符加下划线
-6. interface 以大写字母"I"开始；type 以大写字母"T"开始；enum 以大写字母"E"开始；常量以小写字母"k"起始
+5. 枚举: 必须以大写字母"E"起始；内部必须采用**大写字母**，或大写字符加下划线
+6. interface: 以大写字母"I"起始；
+7. type 以大写字母"T"开始；
+8. 常量以小写字母"k"起始，或全大写字母，或大写字母加下划线
+9. 变量采用小驼峰结构，私有变量可以使用*\_\_*起始
 
 ```
 文件夹: user、user-detail
 文件: user.controller.ts、user.detail.controller.ts
 class: Class UserController {}
 method: indexUser(){}
-常量: const kUserName = '';
 枚举: enum EUser { SEX = 0, USER_SEX = 1};
 interface: interface IUser {};
 type: type TUser {}
+常量: const kUserName; const USER_NAME;
+变量: const userName; const __userName;
 ```
 
 ### 开发规范
 
-1. nest 自带 rxjs，涉及到数据操作，可使用 rxjs API，非必要时，可以不用引数据操作的包
+tips: nest 自带 rxjs，涉及到数据操作，可使用 rxjs API，非必要时，可以不用引数据操作的包，例如 lodash
 
 #### controller 开发
 
 1. controller 必须使用 ApiUseTags 注释，注释规则: `@ApiUseTags('user: 用户模块')`
-2. controller import 文件放置
-   - 顶层放置: 三方包或 Node STL
-   - 中间放置: 自身的文件
+2. controller import 语句放置位置
+   - 顶层放置: Node Native Module 或 三方包
+   - 中间放置: 自己的文件模块
    - 底层放置: 对 protocol 文件的引用
 
+如下所示
+
 ```
-import { Controller, Get, Req } from '@nestjs/common'
-import {} from 'fs';
+import { ... } from 'fs';
+import { ... } from '@nestjs/common'
 
 import { UserService } from '@App/user/user.service';
 
@@ -138,55 +200,132 @@ import { user } from '@Protocol/user.d.ts';
 
 **其余特殊方法可单独命名**
 
-4. controller method 必须定义 swagger 注释 `@ResponseSerialize(XX,true); @ApiOperation()`
-5. controller method 如果返货为 JSON 格式、标准输出数据，则需要以`@ResponseSerialize(XX)`转化，否则会以原有格式返回
+4. controller method 必须定义 swagger 注释 `@ApiOperation()`
+5. controller method 如果返货为 JSON 格式的标准输出数据，则需要以`@ResponseSerialize(XX)`转化，否则会以原有格式返回
 
 #### service 开发
 
-1. service 可使用日志装饰器`@Log()`，_该装饰器会打印 service 进出日志，如果开启 DEBUG，则会打印 service 的完整输出_，**使用该装饰器时，service 必须接受第一个参数为 Request 实体，该实体由 controller 传输**，如下所示。
+1. service 命名方式可选择和 controller 保持一致
+2. **service 调用日志**: service 可使用日志装饰器`@Log()`，该装饰器会打印 service 进出日志，如果开启 DEBUG（[如何开启 DEBUG 日志](#DEBUG)），则会打印 service 的完整输出，**使用该装饰器时，service 必须接受第一个参数为 Request 实体，该实体由 controller 传输**，如下所示。
 
 传输 Request 实体原因:
 
-1. 日志打印必须存在 requestId，而 service 无法获取
-2. 日志打印时，会开启 DEBUG 判断，该参数从 query 传递，service 无法主动获取
+1. 调用日志打印必须存在 requestId，而 service 无法获取 req
+2. 日志打印时，会开启 DEBUG 判断，该参数从 query 传递，service 无法获取 query
 
 ```
 // ---- user.controller.ts ----
-
-@Controller('v1/user')
-@ApiUseTags('user: 用户模块')
-export class UserController {
-  constructor(private readonly userService: UserService) {
-  }
-
-  @Get('/')
-  testUser(@Req() req: IRequest): string {
-    return this.userService.test(req, true);
-  }
+...
+@Get('/')
+testUser(@Req() req: IRequest): string {
+  return this.userService.test(req, true);
 }
+...
 
 
 // ---- user.service.ts ----
-@Injectable()
-export class UserService {
-  @Log()
-  test(req: IRequest, query: boolean): string {
-    if (query) {
-      return 'hello，nest';
-    }
-    return  'hello，word'
+...
+@Log()
+test(req: IRequest, query: boolean): string {
+  if (query) {
+    return 'hello，nest';
   }
+  return  'hello，word'
 }
+...
 ```
-
-2. service 命名方式可选择和 controller 保持一致
 
 #### dto 开发
 
-1. dto 属性必须存在 swagger 注释`@ApiModelProperty()`;
+1. dto 属性必须存在 swagger 注释`@ApiModelProperty()`; tips: 请注意 required 属性，如果前端 \*.d.ts 是根据此 swagger 文档生成，会对前端传参造成影响
+2. 是否需要 \*_.do.ts_ 开发者自己决定
+3. 如果 dto 太多，则需要拆分文件，按照 [src/app 示例](#src/app) 拆分
 
-### 日志
+### Git 规范
 
-1. 日志采用 winston 包，按天切割
-2. 日志统一使用`LogService打印`，不允许出现`console.log`!!!
-3. 线上日志默认关闭 DEBUG，只会打印服务的调用流程，而不会打印完整的信息，可以在 url 参数中加入`?DEBUG=1`开启 DEBUG 模式，tips 时，如果使用`LogService.debug`时，请注意调用参数
+---
+
+## Log
+
+日志
+
+1. 日志采用 winston，由 _log.service.ts_ 提供服务
+2. 日志按天切割，例如 _2020-3-31.log_、_2020-4-01.log_
+
+单条日志信息格式为:
+
+```
+2020-03-32 00:00:00 WARN 调用xx服务错误
+2020-03-32 00:00:00 INFO 进入系统
+2020-03-32 00:00:00 DEBUG 调用xx服务
+```
+
+### 使用
+
+```
+import { LogService } from '@Log/log.service';
+
+LogService.info(xxx);
+```
+
+### 日志分类
+
+1. 系统日志: 描述系统状态，如磁盘使用、内存使用、CPU 使用等。由运维人员维护
+2. 诊断日志:
+   - 系统启动日志: 由模板完成，开发人员无需关心
+   - 系统配置日志: 由模板完成，开发人员无需关心
+   - 操作日志、调用日志: **由开发人员自行打印**
+3. 统计日志: 统一用户使用情况、用户操作等。根据业务而定
+
+### 日志等级
+
+1. FATAL: 致命错误，服务已经挂了，需要运维立处理，无需开发人员打印
+2. ERROR: 严重错误，服务已经不可访问，需要运维立处理，无需开发人员打印
+3. WARN: 警告错误，服务科正常访问，但可能会导致问题，不需要立即处理
+4. INFO: 消息日志，记录运行状态
+5. DEBUG: 消息日志，记录详细操作步骤
+
+### 已存在日志
+
+1. 系统启动日志: 由 _main.ts_ 负责打印
+2. 系统配置日志: 由 _config.service.ts_、_boot.ts_ 等负责打印
+3. 进入系统日志: 由 _log.middware.ts_ 负责打印
+4. 系统调用日志: 由各个 \*_.service.ts_ 负责打印
+5. 离开系统体质: 由 _response.interceptor.ts_ 负责打印
+6. 异常日志: 由 _all.exception.filter.ts_ 负责打印
+
+### 注意事项
+
+#### DEBUG
+
+线上日志默认关闭 DEBUG，只会打印服务的调用流程，而不会打印完整的信息，可以在 url 参数中加入**DEBUG=1** 开启 DEBUG 模式。tips: 如果使用 `LogService.debug()` 时，请注意调用参数
+
+#### requestId
+
+requestId 做为用户调用的唯一标识，标识用户在整个系统中调用身份，由 _log.middware.ts_ 维护。打印调用日志时，请**务必打印 requestId，否则将无法知晓用户在系统中的调用过程**
+
+**日志统一使用 _LogService_ 打印，线上代码不允许出现 _console.log_ !!!**
+
+## Config
+
+配置
+
+1. 配置采用 dotenv 包，由 _config.service.ts_ 提供服务
+2. 配置先读取 _src/config.ts_，再读取根目录 _.env_，且如果 key 值相同，则使用 _.env_ 覆盖 _src/config.ts_
+
+tips: 请注意，**src/config.ts 只放置通用配置**，对不同环境配置或敏感信息配置 不要放在此处!!!，请在配置工程目录中配置环境变量!!!
+
+### 使用
+
+```
+import { ConfigService } from '@Config/config.service';
+
+ConfigService.get(xxx);
+```
+
+## 示例代码: 开发一个功能模块
+
+## 不足
+
+1. 未做接口防刷
+2. 未做 csrf 防御

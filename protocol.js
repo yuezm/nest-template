@@ -30,9 +30,8 @@ function boot() {
     clearDefinition(PROTOCOL_PATH);
     spinner.succeed('Task succeed...');
   } else {
-    let rootPath;
-    if (process.argv[ 2 ] && fs.existsSync(rootPath = path.join(PROTOCOL_PATH, process.argv[ 2 ]))) {
-      transformDefinition(rootPath);
+    if (process.argv[ 2 ] && fs.existsSync(process.argv[ 2 ])) {
+      transformDefinition(process.argv[ 2 ]);
     } else {
       transformDefinition(PROTOCOL_PATH);
     }
@@ -78,7 +77,7 @@ function clearDefinition(rootPath) {
 
 /**
  * 递归文件夹
- * 获取文件夹下所有的 *.proto，再转化为 `${dirname}.d.ts`，如果文件下存在文件夹，则递归；总的来说是以文件夹来划分 *d.ts文件
+ * 获取文件夹下所有的 *.proto，再转化为 `${dirname}.d.ts`，如果文件夹下还存在文件夹，则递归；总的来说是以文件夹来划分 *d.ts文件
  * @param {string} parentPath 父级文件夹路径
  */
 function recursiveDir(parentPath) {

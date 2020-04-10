@@ -1,8 +1,9 @@
 import { Expose } from 'class-transformer';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { EUserRole } from '@App/user/user.static';
 
 export class UserDto {
-  @ApiModelProperty({ description: '' })
+  @ApiPropertyOptional({ description: '名称', enum: EUserRole })
   @Expose()
   name: string;
 }

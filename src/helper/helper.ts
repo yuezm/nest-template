@@ -1,8 +1,8 @@
 import { join } from 'path';
-import { ClientOptions, Transport } from '@nestjs/microservices';
+import { GrpcOptions, Transport } from '@nestjs/microservices';
 import * as dayJs from 'dayjs';
 
-import { IGRPCClientOption } from '@Helper/helper.interface';
+import { IGRPCClientOption } from './helper.interface';
 
 // -------------------------------------- 通用 --------------------------------------
 
@@ -85,7 +85,7 @@ export function transStringToJson(data: string): object | null {
  * @param {string} packageName，*.proto文件的package
  * @param {string} protoPath，*.proto文件的路径，路径以"protocol/"开始计算
  */
-export function getGRPCClientOption({ url, package: packageName, protoPath }: IGRPCClientOption): ClientOptions {
+export function getGRPCClientOption({ url, package: packageName, protoPath }: IGRPCClientOption): GrpcOptions {
   return {
     transport: Transport.GRPC,
     options: {

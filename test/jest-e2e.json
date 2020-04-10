@@ -1,6 +1,17 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "../",
+  "moduleNameMapper": {
+    "^@Src/(.*)": "<rootDir>/src/$1",
+    "^@App/(.*)": "<rootDir>/src/app/$1",
+    "^@Helper/(.*)": "<rootDir>/src/helper/$1",
+    "^@Common/(.*)": "<rootDir>/src/common/$1",
+    "^@Protocol/(.*)": "<rootDir>/protocol/$1",
+    "^@Resource/(.*)": "<rootDir>/resource/$1",
+    "^@Log/(.*)": "<rootDir>/src/common/module/log/$1",
+    "^@Config/(.*)": "<rootDir>/src/common/module/config/$1"
+  },
+  "testTimeout": 30000,
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {

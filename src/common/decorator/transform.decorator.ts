@@ -6,7 +6,7 @@ import { Transform } from 'class-transformer';
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { ValidateIf } from 'class-validator';
 
-import { isEmpty, isNotEmpty } from '@Src/helper';
+import { isEmpty, isNotEmpty } from '@Helper/helper';
 
 export const RESPONSE_SERIALIZE = Symbol('RESPONSE_SERIALIZE');
 

@@ -1,9 +1,10 @@
 import { Server } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder, SwaggerBaseConfig } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import * as cookieParse from 'cookie-parser';
 import * as helmet from 'helmet';
+import * as csurf from 'csurf';
 import ErrnoException = NodeJS.ErrnoException;
 
 import './boot'; // !!!启动脚本必须置于首位!!!
@@ -28,27 +29,25 @@ function httpListening(server: Server, port: number): void {
 }
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, {
-  });
-
-  //  -------------------------------- 配置swagger文档 --------------------------------
-  const documentOptions: SwaggerBaseConfig = new DocumentBuilder()
-    .setTitle(process.env.npm_package_name)
-    .setDescription(`${ process.env.npm_package_name } API`)
-    .setVersion(process.env.npm_package_version)
-    .setBasePath('/api')
-    .build();
-
-  SwaggerModule.setup('api/swagger', app, SwaggerModule.createDocument(app, documentOptions));
+  const app = await NestFactory.create(AppModule, {});
 
   // -------------------------------- nest中间件及其他配置 --------------------------------
   app.enableCors({
     origin: '*',
   });
   app.setGlobalPrefix('/api');
-  app.useLogger(app.get('LogService'));
-  app.use(helmet());
   app.use(cookieParse('session-secret'));
+  app.use(helmet());
+  app.use(csurf());
+
+  //  -------------------------------- 配置swagger文档 --------------------------------
+  const documentOptions: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
+    .setTitle(process.env.npm_package_name)
+    .setDescription(`${ process.env.npm_package_name } API`)
+    .setVersion(process.env.npm_package_version)
+    .build();
+
+  SwaggerModule.setup('api/swagger', app, SwaggerModule.createDocument(app, documentOptions));
 
   // -------------------------------- 启动及启动错误捕获 --------------------------------
 

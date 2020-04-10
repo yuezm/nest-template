@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, HttpException, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { UserService } from '@App/user/user.service';
@@ -19,13 +19,12 @@ export class AuthGuards implements CanActivate {
       return true;
     }
 
+    const request: IRequest = context.switchToHttp().getRequest<IRequest>();
     // 登录校验
-    if (!this.userService.checkLogin()) {
-      throw new HttpException('您未登录', 401);
+    if (!this.userService.checkLogin(request.query.name)) {
+      throw new UnauthorizedException('您未登录，请先登录');
     }
 
-    // 附加用户信息
-    const request: IRequest = context.switchToHttp().getRequest<IRequest>();
     request.userInfo = {
       // 用户信息
     };

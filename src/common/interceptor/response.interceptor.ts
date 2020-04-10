@@ -12,7 +12,6 @@ import { IRequest, IResponseInterceptor } from '@App/app.interface';
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
   constructor(
-    private readonly logService: LogService,
     private readonly reflector: Reflector,
   ) {
   }

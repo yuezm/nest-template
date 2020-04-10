@@ -1,13 +1,14 @@
 import 'reflect-metadata';
+import { types } from 'util';
 import { isObservable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { types } from 'util';
 
 import { LogService } from '@Log/log.service';
 import { IRequest } from '@App/app.interface';
 
-function makeLeaveServiceLog(req: IRequest, name: string, value: any): void {
-  if (req.params.DEBUG) {
+
+function makeLeaveServiceLog(req: IRequest, name: string, value: object | string | number | boolean): void {
+  if (req && req.query && req.query.DEBUG) {
     LogService.debug(`Leave Service: requestId: ${ req.requestId }; serviceName: ${ name }; response: ${ JSON.stringify(value) }`);
   } else {
     LogService.info(`Leave Service: requestId: ${ req.requestId }; serviceName: ${ name };`);

@@ -1,6 +1,6 @@
-import { createParamDecorator, SetMetadata } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, SetMetadata } from '@nestjs/common';
 
-import { IRequest, IUserInfo } from '@App/app.interface';
+import { IUserInfo } from '@App/app.interface';
 import { EUserRole } from '@App/user/user.static';
 
 export const ROLES = Symbol('ROLES');
@@ -10,8 +10,9 @@ export const AUTH_IGNORE = Symbol('AUTH_IGNORE');
  * 获取用户信息的装饰器
  * 使用方式 index(@UserInfo() userInfo){...}
  */
-export const UserInfo = createParamDecorator((data: any, req: IRequest): IUserInfo => {
-  return req.userInfo;
+export const UserInfo = createParamDecorator((data: any, ctx: ExecutionContext): (IUserInfo | any) => {
+  const userInfo: IUserInfo = ctx.switchToHttp().getRequest().userInfo;
+  return data ? userInfo && userInfo[ data ] : userInfo;
 });
 
 /**
