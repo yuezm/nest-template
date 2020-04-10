@@ -7,9 +7,7 @@ import { IRequest } from '@App/app.interface';
 
 @Injectable()
 export class RoleGuards implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-  ) {
+  constructor(private readonly reflector: Reflector){
   }
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {

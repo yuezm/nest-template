@@ -7,13 +7,11 @@ import { AuthGuards } from '@Common/guards/auth.guards';
 import { LogMiddleWare } from '@Common/middware/log.middware';
 
 import { UserModule } from './user/user.module';
-import { TestModule } from '@App/test/test.module';
 
 @Global()
 @Module({
   imports: [
     UserModule,
-    TestModule,
   ],
   providers: [
     {

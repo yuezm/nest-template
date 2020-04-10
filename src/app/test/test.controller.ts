@@ -1,11 +1,13 @@
-import { BadRequestException, Controller, Get, HttpException, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, HttpException, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { TestService } from './test.service';
 import { ResponseSerialize } from '@Common/decorator/transform.decorator';
 import { TestReqDto, TestResDto } from '@App/test/test.dto';
 import { EmptyDto } from '@App/app.dto';
-import { AuthIgnore } from '@Common/decorator/user.decorator';
+import { AuthIgnore, Roles, UserInfo } from '@Common/decorator/user.decorator';
+import { RoleGuards } from '@Common/guards/role.guards';
+import { EUserRole } from '@App/user/user.static';
 
 @Controller('/v1/test')
 @ApiTags('test: 测试')
@@ -62,9 +64,18 @@ export class TestController {
   }
 
   @Get('/auth')
-  @ResponseSerialize(TestResDto, true)
+  @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
-  testAuthError(): string {
+  testAuthError(@UserInfo() userInfo): string {
+    return this.testService.test();
+  }
+
+  @Get('/role')
+  @UseGuards(RoleGuards)
+  @Roles(EUserRole.TEST)
+  @ResponseSerialize(TestResDto, true)
+  @ApiOperation({ summary: '角色拦截测试' })
+  testRoleError(): string {
     return this.testService.test();
   }
 }

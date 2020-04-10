@@ -1,4 +1,4 @@
 export enum EUserRole {
-  NAME,
-  AGE,
+  ROOT = 1,
+  TEST = 2,
 }
