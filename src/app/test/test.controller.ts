@@ -67,6 +67,7 @@ export class TestController {
   @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
   testAuthError(@UserInfo() userInfo): string {
+    console.log(userInfo);
     return this.testService.test();
   }
 
