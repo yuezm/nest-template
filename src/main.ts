@@ -37,8 +37,10 @@ async function bootstrap(): Promise<void> {
   });
   app.setGlobalPrefix('/api');
   app.use(cookieParse('session-secret'));
-  app.use(helmet());
-  // app.use(csurf());
+  if (process.env.NODE_ENV === 'production') {
+    app.use(helmet());
+    app.use(csurf());
+  }
 
   //  -------------------------------- 配置swagger文档 --------------------------------
   const documentOptions: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
