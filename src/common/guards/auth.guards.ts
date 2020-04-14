@@ -27,6 +27,7 @@ export class AuthGuards implements CanActivate {
 
     request.userInfo = {
       // 用户信息
+      name: request.query.name,
     };
 
     return true;

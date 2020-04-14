@@ -42,7 +42,7 @@ describe('TestController (e2e)', () => {
       ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication(null, { logger: false });
     await app.init();
   });
 
@@ -123,6 +123,15 @@ describe('TestController (e2e)', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data === 'Hello World!' && res.body.errcode === 0).toBeTruthy();
+      });
+  });
+
+  it('/api/v1/test/userInfo 获取用户信息', () => {
+    return request(app.getHttpServer())
+      .get('/v1/test/userInfo?name=test')
+      .expect(200)
+      .expect(res => {
+        expect(res.body.data === 'test' && res.body.errcode === 0).toBeTruthy();
       });
   });
 

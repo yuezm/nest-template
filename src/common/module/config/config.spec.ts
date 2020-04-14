@@ -1,5 +1,6 @@
 import { ConfigService } from '@Config/config.service';
 
+
 describe('Test ConfigService', () => {
   it('ConfigService 静态 get ', () => {
     expect(ConfigService.get('LOG_PATH')).toBe('./logs');

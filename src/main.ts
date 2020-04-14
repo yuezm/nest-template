@@ -29,7 +29,7 @@ function httpListening(server: Server, port: number): void {
 }
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, {});
+  const app = await NestFactory.create(AppModule, { logger: false });
 
   // -------------------------------- nest中间件及其他配置 --------------------------------
   app.enableCors({
@@ -38,7 +38,7 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix('/api');
   app.use(cookieParse('session-secret'));
   app.use(helmet());
-  app.use(csurf());
+  // app.use(csurf());
 
   //  -------------------------------- 配置swagger文档 --------------------------------
   const documentOptions: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()

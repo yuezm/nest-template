@@ -11,11 +11,7 @@ import { parse } from 'dotenv';
 import defaultConfig from '@Src/config';
 
 const envPath = join(process.cwd(), '.env');
-
-const config: object = Object.assign(
-  defaultConfig,
-  existsSync(envPath) ? parse(readFileSync(envPath)) : null,
-);
+const config: object = existsSync(envPath) ? Object.assign(defaultConfig, parse(readFileSync(envPath))) : defaultConfig;
 
 @Injectable()
 export class ConfigService {

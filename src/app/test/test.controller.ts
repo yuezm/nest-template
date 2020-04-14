@@ -19,8 +19,9 @@ export class TestController {
   @AuthIgnore()
   @ResponseSerialize(TestResDto, true)
   @ApiOperation({ summary: 'ValidatePipe-BadRequest' })
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   testParamsValidate(@Query() query: TestReqDto): string {
-    console.log(query);
     return this.testService.test();
   }
 
@@ -66,9 +67,17 @@ export class TestController {
   @Get('/auth')
   @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   testAuthError(@UserInfo() userInfo): string {
-    console.log(userInfo);
     return this.testService.test();
+  }
+
+  @Get('/userInfo')
+  @ResponseSerialize(TestResDto)
+  @ApiOperation({ summary: '登录拦截测试' })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  testGetUserInfo(@UserInfo('name') name): string {
+    return name;
   }
 
   @Get('/role')
