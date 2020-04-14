@@ -20,7 +20,7 @@ export class TestController {
   @ResponseSerialize(TestResDto, true)
   @ApiOperation({ summary: 'ValidatePipe-BadRequest' })
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   testParamsValidate(@Query() query: TestReqDto): string {
     return this.testService.test();
   }
@@ -67,7 +67,7 @@ export class TestController {
   @Get('/auth')
   @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars-ts
   testAuthError(@UserInfo() userInfo): string {
     return this.testService.test();
   }

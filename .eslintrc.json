@@ -6,7 +6,8 @@
   ],
   "plugins": [
     "@typescript-eslint",
-    "security"
+    "security",
+    "unused-imports"
   ],
   "env": {
     "browser": true,
@@ -21,7 +22,10 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": [
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports-ts": 2,
+    "unused-imports/no-unused-vars-ts": 1,
+    "@typescript-eslint/no-unused-expressions": [
       "error"
     ],
     "security/detect-object-injection": "off"

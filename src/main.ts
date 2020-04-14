@@ -4,7 +4,7 @@ import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import * as cookieParse from 'cookie-parser';
 import * as helmet from 'helmet';
-import * as csurf from 'csurf';
+// import * as csurf from 'csurf';
 import ErrnoException = NodeJS.ErrnoException;
 
 import './boot'; // !!!启动脚本必须置于首位!!!
@@ -39,7 +39,7 @@ async function bootstrap(): Promise<void> {
   app.use(cookieParse('session-secret'));
   if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
-    app.use(csurf());
+    // app.use(csurf());
   }
 
   //  -------------------------------- 配置swagger文档 --------------------------------
