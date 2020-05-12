@@ -1,13 +1,17 @@
+// import easyMonitor = require('easy-monitor');
+// easyMonitor(process.env.npm_package_name);
+
 import { Server } from 'http';
+import ErrnoException = NodeJS.ErrnoException;
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import * as cookieParse from 'cookie-parser';
 import * as helmet from 'helmet';
-// import * as csurf from 'csurf';
-import ErrnoException = NodeJS.ErrnoException;
+import * as csurf from 'csurf';
 
 import './boot'; // !!!启动脚本必须置于首位!!!
+
 import { ConfigService } from '@Config/config.service';
 import { AppModule } from '@App/app.module';
 import { LogService } from '@Log/log.service';
@@ -36,11 +40,9 @@ async function bootstrap(): Promise<void> {
     origin: '*',
   });
   app.setGlobalPrefix('/api');
-  app.use(cookieParse('session-secret'));
-  if (process.env.NODE_ENV === 'production') {
-    app.use(helmet());
-    // app.use(csurf());
-  }
+  app.use(cookieParse());
+  app.use(csurf({ cookie: {} })); // 请求赋值 csrf-token 首部
+  app.use(helmet());
 
   //  -------------------------------- 配置swagger文档 --------------------------------
   const documentOptions: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
@@ -48,11 +50,9 @@ async function bootstrap(): Promise<void> {
     .setDescription(`${ process.env.npm_package_name } API`)
     .setVersion(process.env.npm_package_version)
     .build();
-
   SwaggerModule.setup('api/swagger', app, SwaggerModule.createDocument(app, documentOptions));
 
   // -------------------------------- 启动及启动错误捕获 --------------------------------
-
   await app.listen(ConfigService.get('HTTP_PORT'));
   httpListening(app.getHttpServer(), ConfigService.get('HTTP_PORT'));
 }

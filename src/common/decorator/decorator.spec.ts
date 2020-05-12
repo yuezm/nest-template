@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { IsInt, IsString, validate } from 'class-validator';
+import { IsString, validate } from 'class-validator';
 import { Expose, plainToClass } from 'class-transformer';
 
 import { Log } from '@Common/decorator/common.decorator';

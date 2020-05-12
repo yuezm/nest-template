@@ -11,6 +11,7 @@
     "baseUrl": "./",
     "incremental": true,
     "alwaysStrict": true,
+    "allowJs": true,
     "paths": {
       "@Src/*": [
         "./src/*"
@@ -41,5 +42,8 @@
   "exclude": [
     "node_modules",
     "dist"
+  ],
+  "include": [
+    "src"
   ]
 }

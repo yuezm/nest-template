@@ -6,10 +6,11 @@ import { map } from 'rxjs/operators';
 import { LogService } from '@Log/log.service';
 import { IRequest } from '@App/app.interface';
 
+export const NORMAL_LOG = Symbol('NORMAL_LOG');
 
 function makeLeaveServiceLog(req: IRequest, name: string, value: object | string | number | boolean): void {
   if (req && req.query && req.query.DEBUG) {
-    LogService.debug(`Leave Service: requestId: ${ req.requestId }; serviceName: ${ name }; response: ${ JSON.stringify(value) }`);
+    LogService.debug(`Leave Service: requestId: ${ req.requestId }; serviceName: ${ name }; response: ${ JSON.stringify(value) }`, true);
   } else {
     LogService.info(`Leave Service: requestId: ${ req.requestId }; serviceName: ${ name };`);
   }
@@ -46,6 +47,6 @@ export function Log(): MethodDecorator {
       return result;
     };
 
-    Reflect.defineMetadata('NORMAL_LOG', 'NORMAL_LOG', target, propertyKey);
+    Reflect.defineMetadata(NORMAL_LOG, NORMAL_LOG, target, propertyKey);
   };
 }

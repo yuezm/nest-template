@@ -14,10 +14,10 @@ import { UserModule } from './user/user.module';
     UserModule,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuards,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuards,
+    // },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
