@@ -1,9 +1,9 @@
 import { Global, Logger, MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER,  APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { AllExceptionFilter } from '@Common/filter/all.exception.filter';
 import { ResponseInterceptor } from '@Common/interceptor/response.interceptor';
-import { AuthGuards } from '@Common/guards/auth.guards';
+
 import { LogMiddleWare } from '@Common/middware/log.middware';
 
 import { UserModule } from './user/user.module';

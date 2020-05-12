@@ -5,7 +5,7 @@ import { UserService } from '@App/user/user.service';
 import { ResponseSerialize } from '@Common/decorator/transform.decorator';
 import { UserCSRFTokenDto } from '@App/user/user.dto';
 import { Log } from '@Common/decorator/common.decorator';
-import { throwError } from 'rxjs';
+
 
 @Controller('v1/user')
 @ApiTags('user: 用户模块')
