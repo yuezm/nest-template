@@ -12,7 +12,7 @@ import {
   transToGoogleType,
 } from './helper';
 import { AppModule } from '@App/app.module';
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 
 describe('Helper Test', () => {
   let app;

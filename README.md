@@ -1,23 +1,33 @@
-## Installation
+# node.js 项目文档（基于 nest.js 7.x）
+
+## 介绍
+
+适用于 node 接口层文档，包含文件、规范、开发示例等
+
+## 安装
 
 ```bash
 $ npm install
 ```
 
-## Running
+**依赖模块**
+
+- @nestjs/common
+- @nestjs/core
+- @nestjs/...
+- winston
+- dayjs
+- pm2
+- ...
+
+## 开发
 
 ```bash
 # develop
 $ npm run dev
-
-# production with docker
-$ npm run startup:docker
-
-# production without docker
-$ npm run startup
 ```
 
-## Build
+## 打包
 
 ```bash
 # build app
@@ -28,6 +38,16 @@ $ npm run build:docker
 
 # build proto buffer
 $ npm run build:protocol
+```
+
+## 生产运行
+
+```bash
+# production with docker
+$ npm run startup:docker
+
+# production with pm2
+$ npm run startup
 ```
 
 ## Test
@@ -43,25 +63,23 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## 规范
+## 目录
 
-### 目录
+### src
 
-#### src
+#### src/app
 
-存放源码
+存放于业务模块，文件按业务拆分，<font color="red">该项目文件未按照角色拆分，而是按照业务模块拆分</font>。即同模块下，controller、service、module、dto、dto、static 存放于一个文件夹下
 
-##### src/app
+| 文件名           | 路径                        | 功能描述                                                                                       |
+| :--------------- | :-------------------------- | :--------------------------------------------------------------------------------------------- |
+| \*.controller.ts | src/app/\*/\*.controller.ts | 控制器，负责数据校验，数据组装，**请注意，controller 不负责重逻辑，重逻辑请放置于 service!!!** |
+| \*.service.ts    | src/app/\*/\*.service.ts    | 业务处理，例如发起 gRPC 请求                                                                   |
+| \*.do.ts         | src/app/\*/\*.do.ts         | 向服务端（数据库）接收、传输的数据实体                                                         |
+| \*.dto.ts        | src/app/\*/\*.dto.ts        | 向前端接收、传输的数据实体，_目前未严格区分 do、dto，如何使用请自行决定_                       |
+| \*.static.ts     | src/app/\*/\*.static.ts     | 模块的枚举、interface、type、常量等定义                                                        |
 
-src/app 存放于业务模块，文件按业务拆分，**该项目文件未按照角色拆分，而是按照业务模块拆分，即同模块下，controller、service、module、dto、dto、static 存在一处**
-
-- \*.controller.ts: 控制器，负责数据校验，数据组装，**不负责重逻辑，重逻辑请放置于 service!!!**
-- \*.service.ts: 主要业务逻辑处理
-- \*.dto.ts: 向前端接收的数据实体
-- \*.do.ts: 向服务端（数据库）接收的数据实体
-- \*.static.ts: 当前模块下的枚举，接口定义
-
-tips: 如果业务模块过于复杂，可以再进行拆分，如下所示
+提示：如果业务模块过于复杂，可以再进行拆分，一切以好维护为标准，例如可以按照如下进行拆分：
 
 ```
 - test
@@ -77,100 +95,95 @@ tips: 如果业务模块过于复杂，可以再进行拆分，如下所示
   test.module.ts
 ```
 
-##### src/common
+#### src/common
 
 存放公用包，如 nest 定义的不同角色的模块
 
-- decorator: 通用装饰器
+##### decorator 装饰器
 
-  - common.decorator.ts: 通用装饰器文件
-  - transform.decorator.ts: 负责数据实体转换、类型校验等的装饰器文件
-  - user.decorator.ts: 负责用户信息设置、获取、权限设置等的装饰器文件
+| 文件名                 | 路径                                        | 功能描述                                 |
+| :--------------------- | :------------------------------------------ | :--------------------------------------- |
+| transform.decorator.ts | src/common/decorator/transform.decorator.ts | 数据实体转换、类型校验等装饰器文件       |
+| user.decorator.ts      | src/common/decorator/user.decorator.ts      | 用户信息设置、获取、权限设置等装饰器文件 |
 
-- filter: 通用异常过滤器
+##### filter 异常过滤器
 
-  - all.exception.filter.ts: 通用所有异常捕获
+| 文件名                  | 路径                                      | 功能描述                                 |
+| :---------------------- | :---------------------------------------- | :--------------------------------------- |
+| all.exception.filter.ts | src/common/filter/all.exception.filter.ts | 所有异常捕获，组装错误码、错误信息并返回 |
 
-- guards: 通用守卫
+##### guards 守卫
 
-  - auth.guards.ts: 登录权限守卫
-  - role.guards.ts: 角色权限守卫
+| 文件名         | 路径                             | 功能描述                                         |
+| :------------- | :------------------------------- | :----------------------------------------------- |
+| auth.guards.ts | src/common/guards/auth.guards.ts | auth.guards.ts （免登录使用 AuthIgnore 装饰器）  |
+| role.guards.ts | src/common/guards/role.guards.ts | 角色权限守卫（配合 Roles、UseGuards 装饰器使用） |
 
-- interceptor: 通用拦截器
+##### interceptor 通用拦截器
 
-  - response.interceptor.ts: 返回值统一格式序列化，使用方法，如下所示
+| 文件名                  | 路径                                           | 功能描述             |
+| :---------------------- | :--------------------------------------------- | :------------------- |
+| response.interceptor.ts | src/common/interceptor/response.interceptor.ts | 返回值统一格式序列化 |
 
-  ```
-  class TestController{
+##### middware 中间件
 
-    @Get('/')
-    @ResponseSerialize(*.Dto, true);
-    index(){
-      //
-    }
-  }
-  ```
+| 文件名          | 路径                                | 功能描述             |
+| :-------------- | :---------------------------------- | :------------------- |
+| log.middware.ts | src/common/middware/log.middware.ts | 服务入口通用日志打印 |
 
-  tips: ResponseSerialize 接收第二个参数，如果为 true，则代表生成 swagger 的`ApiOkResponse()`，详细可查看 _transform.decorator.ts_
+##### module 自定义通用模块
 
-* middware: 通用中间件
+| 文件名            | 路径                                | 功能描述 |
+| :---------------- | :---------------------------------- | :------- |
+| log.service.ts    | src/common/module/log.service.ts    | 日志服务 |
+| config.service.ts | src/common/module/config.service.ts | 服务配置 |
 
-  - log.middware.ts: 服务入口通用日志打印
+#### src/config 系统配置
 
-* module: 通用模块
-  - log 模块: 日志打印模块 ==> log.service.ts
-  - config 模块: 服务配置 ==> config.service.ts
+| 文件名   | 路径                | 功能描述 |
+| :------- | :------------------ | :------- |
+| index.ts | src/config/index.ts | 配置文件 |
 
-##### src/config
+<font color="red">src/config.ts 只放置通用配置</font>，对**不同环境配置**或**敏感信息配置**不要放在此处!!!，请在配置工程目录中配置环境变量!!!
 
-系统配置文件
+#### src/helper 工具函数
 
-##### src/helper
+| 文件名    | 路径                 | 功能描述             |
+| :-------- | :------------------- | :------------------- |
+| helper.ts | src/helper/helper.ts | 工具函数             |
+| error.ts  | src/helper/error.ts  | 错误码、错误信息映射 |
 
-工具函数，**增加工具函数，请增加测试!!!**
+**增加工具函数，请增加测试，工具函数测试覆盖率必须 100%!!!**
 
-##### src/boot.ts
+#### src/boot.ts 启动脚本
 
-启动前脚本，为在启动服务前需要执行的脚本
+启动前执行脚本，为在启动服务前需要执行的脚本，例如本项目的 require hack
 
-##### main.ts
+#### main.ts 入口文件
 
-入口文件
+1. 加载 boot.ts
+2. 执行 bootstrap
+3. HTTP 启动时，端口占用处理
+4. 错误捕获
 
-- 加载启动前脚本
-- 执行引导
-- HTTP 启动时，端口占用处理
-- 错误捕获
+## 命名
 
-### 命名
+| 命名       | 规则                                                                  | 示例                                          |
+| :--------- | :-------------------------------------------------------------------- | :-------------------------------------------- |
+| 文件夹命名 | 文件夹命名统一小写，如果存在多单词，则使用*短横线*连接                | user、user-detail                             |
+| 文件命名   | 文件名统一小写，且按照角色命名，如果存在多单词，则使用 "." 连接       | user.controller.ts、user.detail.controller.ts |
+| class 命名 | 采用大驼峰结构                                                        | `Class UserController {}`                     |
+| 方法命名   | 采用小驼峰结构                                                        | `indexUser(){}`                               |
+| enum       | 必须以大写字母"E"起始；枚举值必须采用**大写字母**，或大写字符加下划线 | `enum EUser { SEX = 0, USER_SEX = 1};`        |
+| interface  | 必须以大写字母"E"起始；枚举值必须采用**大写字母**，或大写字符加下划线 | `enum EUser { SEX = 0, USER_SEX = 1};`        |
+| interface  | 以大写字母"I"起始的大驼峰结构                                         | `interface IUser {}`                          |
+| type       | 以大写字母"T"起始的大驼峰结构                                         | `type TUser {}`                               |
+| 常量       | 以小写字母"k"起始、全大写字母、大写字母加下划线                       | `const kUserName; const USER_NAME;`           |
+| 变量       | 变量采用小驼峰结构                                                    | `const userName`                              |
 
-1. 文件夹命名: 文件夹命名统一小写，如果存在多单词，则使用*短横线*连接，例如 _user-detail_
-2. 文件命名: 文件名统一小写，且按照角色命名，如果存在多单词，则使用 "." 连接，例如 _user.controller.ts、user.detail.controller.ts_
-3. class 命名: 采用大驼峰结构
-4. 方法命名: 采用小驼峰结构
-5. 枚举: 必须以大写字母"E"起始；内部必须采用**大写字母**，或大写字符加下划线
-6. interface: 以大写字母"I"起始；
-7. type 以大写字母"T"开始；
-8. 常量以小写字母"k"起始，或全大写字母，或大写字母加下划线
-9. 变量采用小驼峰结构，私有变量可以使用*\_\_*起始
+## 开发规范
 
-```
-文件夹: user、user-detail
-文件: user.controller.ts、user.detail.controller.ts
-class: Class UserController {}
-method: indexUser(){}
-枚举: enum EUser { SEX = 0, USER_SEX = 1};
-interface: interface IUser {};
-type: type TUser {}
-常量: const kUserName; const USER_NAME;
-变量: const userName; const __userName;
-```
-
-### 开发规范
-
-tips: nest 自带 rxjs，涉及到数据操作，可使用 rxjs API，非必要时，可以不用引数据操作的包，例如 lodash
-
-#### controller 开发
+### controller 开发
 
 1. controller 必须使用 ApiUseTags 注释，注释规则: `@ApiUseTags('user: 用户模块')`
 2. controller import 语句放置位置
@@ -191,19 +204,22 @@ import { user } from '@Protocol/user.d.ts';
 
 3. controller 内方法命名
 
-   - GET 方法（列表查询）: 以*index*起始，例如`indexUser(){}`
-   - GET 方法（检索查询）: 以*show*起始，例如`showUser(){}`
-   - POST 方法 （新增）: 以*create*起始，例如`createUser(){}`
-   - PUT 方法（编辑）: 以*update*起始，例如`updateUser(){}`
-   - DELETE 方法（删除）: 以*delete*起始，例如`deleteUser(){}`
-   - 任意方法（测试方法）: 以*test*起始，例如`testUser(){}`
+   | 方法        | 规则                    | 示例             |
+   | :---------- | :---------------------- | :--------------- |
+   | GET /       | 列表查询：以*index*起始 | `indexUser(){}`  |
+   | GET /:id    | 检索查询：以*show*起始  | `showUser(){}`   |
+   | GET /       | 导出：以*export*起始    | `exportUser(){}` |
+   | POST /      | 新增：以*create*起始    | `createUser(){}` |
+   | PUT /:id    | 编辑：以*update*起始    | `updateUser(){}` |
+   | DELETE /:id | 删除：以*delete*起始    | `deleteUser(){}` |
+   | -           | 测试：以*test*起始      | `testUser(){}`   |
 
 **其余特殊方法可单独命名**
 
 4. controller method 必须定义 swagger 注释 `@ApiOperation()`
 5. controller method 如果返货为 JSON 格式的标准输出数据，则需要以`@ResponseSerialize(XX)`转化，否则会以原有格式返回
 
-#### service 开发
+### service 开发
 
 1. service 命名方式可选择和 controller 保持一致
 2. **service 调用日志**: service 可使用日志装饰器`@Log()`，该装饰器会打印 service 进出日志，如果开启 DEBUG（[如何开启 DEBUG 日志](#DEBUG)），则会打印 service 的完整输出，**使用该装饰器时，service 必须接受第一个参数为 Request 实体，该实体由 controller 传输**，如下所示。
@@ -235,19 +251,15 @@ test(req: IRequest, query: boolean): string {
 ...
 ```
 
-#### dto 开发
+### dto 开发
 
-1. dto 属性必须存在 swagger 注释`@ApiModelProperty()`; tips: 请注意 required 属性，如果前端 \*.d.ts 是根据此 swagger 文档生成，会对前端传参造成影响
+1. dto 属性必须存在 swagger 注释`@ApiProperty()`或`ApiPropertyOptional()`（注意 7.x 和 6.x 的方法名）; 请注意 required 属性，如果前端 \*.d.ts 是根据此 swagger 文档生成，会对前端传参造成影响
 2. 是否需要 \*_.do.ts_ 开发者自己决定
 3. 如果 dto 太多，则需要拆分文件，按照 [src/app 示例](#src/app) 拆分
 
-### Git 规范
-
 ---
 
-## Log
-
-日志
+## Log 日志
 
 1. 日志采用 winston，由 _log.service.ts_ 提供服务
 2. 日志按天切割，例如 _2020-3-31.log_、_2020-4-01.log_
@@ -304,16 +316,12 @@ LogService.info(xxx);
 
 requestId 做为用户调用的唯一标识，标识用户在整个系统中调用身份，由 _log.middware.ts_ 维护。打印调用日志时，请**务必打印 requestId，否则将无法知晓用户在系统中的调用过程**
 
-**日志统一使用 _LogService_ 打印，线上代码不允许出现 _console.log_ !!!**
+**日志统一使用 _LogService_ 打印，线上代码不允许出现 _console.log_ !!!** 日志
 
-## Config
-
-配置
+## Config 配置
 
 1. 配置采用 dotenv 包，由 _config.service.ts_ 提供服务
 2. 配置先读取 _src/config.ts_，再读取根目录 _.env_，且如果 key 值相同，则使用 _.env_ 覆盖 _src/config.ts_
-
-tips: 请注意，**src/config.ts 只放置通用配置**，对不同环境配置或敏感信息配置 不要放在此处!!!，请在配置工程目录中配置环境变量!!!
 
 ### 使用
 
@@ -325,10 +333,17 @@ ConfigService.get(xxx);
 
 ## 示例代码: 开发一个功能模块
 
+### 第一步 创建文件
+
+1. 在 _src/app_ 下创建模块，例如 user 模块，则创建 _user.module.ts、user.controller.ts..._
+2. 将 _user.controller.ts_ 和 _user.service.ts_ 加入 _user.module.ts_ 中
+
+### 第二部 加入 appModule
+
+将创建好的*user.module.ts* 加入 *app.module.ts*中，此时即可使用了
+
 ## 不足
 
 1. 未做接口防刷
 2. 未做 csrf 防御
-
-
-
+3. 未做 XSS 防御，由于未涉及数据库，也不涉及单独返回数据（该项目请求微服务，将微服务返回的数据做转发），所以对输入输出都未做任何处理
