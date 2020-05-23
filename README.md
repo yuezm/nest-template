@@ -175,7 +175,6 @@ $ npm run test:cov
 | class 命名 | 采用大驼峰结构                                                        | `Class UserController {}`                     |
 | 方法命名   | 采用小驼峰结构                                                        | `indexUser(){}`                               |
 | enum       | 必须以大写字母"E"起始；枚举值必须采用**大写字母**，或大写字符加下划线 | `enum EUser { SEX = 0, USER_SEX = 1};`        |
-| interface  | 必须以大写字母"E"起始；枚举值必须采用**大写字母**，或大写字符加下划线 | `enum EUser { SEX = 0, USER_SEX = 1};`        |
 | interface  | 以大写字母"I"起始的大驼峰结构                                         | `interface IUser {}`                          |
 | type       | 以大写字母"T"起始的大驼峰结构                                         | `type TUser {}`                               |
 | 常量       | 以小写字母"k"起始、全大写字母、大写字母加下划线                       | `const kUserName; const USER_NAME;`           |
@@ -187,9 +186,10 @@ $ npm run test:cov
 
 1. controller 必须使用 ApiUseTags 注释，注释规则: `@ApiUseTags('user: 用户模块')`
 2. controller import 语句放置位置
-   - 顶层放置: Node Native Module 或 三方包
-   - 中间放置: 自己的文件模块
-   - 底层放置: 对 protocol 文件的引用
+
+- 顶层放置: Node Native Module 或 三方包
+- 中间放置: 自己的文件模块
+- 底层放置: 对 protocol 文件的引用
 
 如下所示
 
@@ -204,15 +204,15 @@ import { user } from '@Protocol/user.d.ts';
 
 3. controller 内方法命名
 
-   | 方法        | 规则                    | 示例             |
-   | :---------- | :---------------------- | :--------------- |
-   | GET /       | 列表查询：以*index*起始 | `indexUser(){}`  |
-   | GET /:id    | 检索查询：以*show*起始  | `showUser(){}`   |
-   | GET /       | 导出：以*export*起始    | `exportUser(){}` |
-   | POST /      | 新增：以*create*起始    | `createUser(){}` |
-   | PUT /:id    | 编辑：以*update*起始    | `updateUser(){}` |
-   | DELETE /:id | 删除：以*delete*起始    | `deleteUser(){}` |
-   | -           | 测试：以*test*起始      | `testUser(){}`   |
+| 方法        | 规则                    | 示例             |
+| :---------- | :---------------------- | :--------------- |
+| GET /       | 列表查询：以 index 起始 | `indexUser(){}`  |
+| GET /:id    | 检索查询：以 show 起始  | `showUser(){}`   |
+| GET /       | 导出：以 export 起始    | `exportUser(){}` |
+| POST /      | 新增：以 create 起始    | `createUser(){}` |
+| PUT /:id    | 编辑：以 update 起始    | `updateUser(){}` |
+| DELETE /:id | 删除：以 delete 起始    | `deleteUser(){}` |
+| 测试方法    | 测试：以 test 起始      | `testUser(){}`   |
 
 **其余特殊方法可单独命名**
 
@@ -222,7 +222,7 @@ import { user } from '@Protocol/user.d.ts';
 ### service 开发
 
 1. service 命名方式可选择和 controller 保持一致
-2. **service 调用日志**: service 可使用日志装饰器`@Log()`，该装饰器会打印 service 进出日志，如果开启 DEBUG（[如何开启 DEBUG 日志](#DEBUG)），则会打印 service 的完整输出，**使用该装饰器时，service 必须接受第一个参数为 Request 实体，该实体由 controller 传输**，如下所示。
+2. **service 调用日志**: service 可使用日志装饰器 `@Log()`，该装饰器会打印 service 进出日志，如果开启 DEBUG（[如何开启 DEBUG 日志](#DEBUG)），则会打印 service 的完整输出，**使用该装饰器时，service 必须接受第一个参数为 Request 实体，该实体由 controller 传输**，如下所示。
 
 传输 Request 实体原因:
 
@@ -234,7 +234,7 @@ import { user } from '@Protocol/user.d.ts';
 ...
 @Get('/')
 testUser(@Req() req: IRequest): string {
-  return this.userService.test(req, true);
+return this.userService.test(req, true);
 }
 ...
 
@@ -243,10 +243,10 @@ testUser(@Req() req: IRequest): string {
 ...
 @Log()
 test(req: IRequest, query: boolean): string {
-  if (query) {
-    return 'hello，nest';
-  }
-  return  'hello，word'
+if (query) {
+  return 'hello，nest';
+}
+return  'hello，word'
 }
 ...
 ```
@@ -284,9 +284,11 @@ LogService.info(xxx);
 
 1. 系统日志: 描述系统状态，如磁盘使用、内存使用、CPU 使用等。由运维人员维护
 2. 诊断日志:
-   - 系统启动日志: 由模板完成，开发人员无需关心
-   - 系统配置日志: 由模板完成，开发人员无需关心
-   - 操作日志、调用日志: **由开发人员自行打印**
+
+- 系统启动日志: 由模板完成，开发人员无需关心
+- 系统配置日志: 由模板完成，开发人员无需关心
+- 操作日志、调用日志: **由开发人员自行打印**
+
 3. 统计日志: 统一用户使用情况、用户操作等。根据业务而定
 
 ### 日志等级
