@@ -1,4 +1,12 @@
-import { BadRequestException, Controller, Get, HttpException, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  HttpException,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { TestService } from './test.service';
@@ -8,20 +16,21 @@ import { EmptyDto } from '@App/app.dto';
 import { AuthIgnore, Roles, UserInfo } from '@Common/decorator/user.decorator';
 import { RoleGuards } from '@Common/guards/role.guards';
 import { EUserRole } from '@App/user/user.static';
+import { Observable } from 'rxjs';
+import { Request } from 'express';
+import { IUserInfo } from '@App/app.interface';
 
 @Controller('/v1/test')
 @ApiTags('test: 测试')
 export class TestController {
-  constructor(private readonly testService: TestService) {
-  }
+  constructor(private readonly testService: TestService) {}
 
   @Get('/')
   @AuthIgnore()
   @ResponseSerialize(TestResDto, true)
   @ApiOperation({ summary: 'ValidatePipe-BadRequest' })
-
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
-  testParamsValidate(@Query() query: TestReqDto): string {
+  // eslint-disable-next-line
+  testParamsValidate(@Query() query: TestReqDto, @Req() request): string {
     return this.testService.test();
   }
 
@@ -68,7 +77,7 @@ export class TestController {
   @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars-ts
-  testAuthError(@UserInfo() userInfo): string {
+  testAuthError(@UserInfo() userInfo: IUserInfo): string {
     return this.testService.test();
   }
 
@@ -76,7 +85,7 @@ export class TestController {
   @ResponseSerialize(TestResDto)
   @ApiOperation({ summary: '登录拦截测试' })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  testGetUserInfo(@UserInfo('name') name): string {
+  testGetUserInfo(@UserInfo('name') name: string): string {
     return name;
   }
 
@@ -87,5 +96,14 @@ export class TestController {
   @ApiOperation({ summary: '角色拦截测试' })
   testRoleError(): string {
     return this.testService.test();
+  }
+
+  @Get('/example')
+  @AuthIgnore()
+  testRpcClient(@Req() request: Request): Observable<any> {
+    return this.testService.requestGRPCWrapper<any>(
+      request,
+      this.testService.indexExample,
+    )();
   }
 }

@@ -2,24 +2,27 @@ import { join } from 'path';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import * as dayJs from 'dayjs';
 
-import { IGRPCClientOption } from './helper.interface';
+import { IGRPCClientOptions } from './helper.interface';
+
+import { Observable } from 'rxjs';
+
 
 // -------------------------------------- 通用 --------------------------------------
 
 // 空校验
-export function isEmpty(value: any): boolean {
+export function isEmpty(value: unknown): boolean {
   return value === '' || value === undefined || value === null;
 }
 
 // 非空校验
-export function isNotEmpty(value: any): boolean {
+export function isNotEmpty(value: unknown): boolean {
   return !isEmpty(value);
 }
 
 // ------------------------------ 数据格式转换  ------------------------------
 
 // 将js数据类型转换为 google 数据类型，例如将 number 转换为 Int64Value
-export function transToGoogleType(value: number | string | boolean): object {
+export function transToGoogleType(value: number | string | boolean): unknown {
   return isEmpty(value) ? null : { value };
 }
 
@@ -71,11 +74,9 @@ export function transPriceToYuan(price: number): string | null {
 }
 
 // 将JSON形式字符串转为JSON
-export function transStringToJson(data: string): object | null {
+export function transStringToJson(data: string): unknown | null {
   return isEmpty(data) ? null : JSON.parse(data);
 }
-
-// ------------------------------ 数据格式化 ------------------------------
 
 // ------------------------------ gRPC ------------------------------
 
@@ -85,12 +86,12 @@ export function transStringToJson(data: string): object | null {
  * @param {string} packageName，*.proto文件的package
  * @param {string} protoPath，*.proto文件的路径，路径以"protocol/"开始计算
  */
-export function getGRPCClientOption({ url, package: packageName, protoPath }: IGRPCClientOption): GrpcOptions {
+export function composeGRPCClientOption({ url, package: _package, protoPath }: IGRPCClientOptions): GrpcOptions {
   return {
     transport: Transport.GRPC,
     options: {
       url,
-      package: packageName,
+      package: _package,
       protoPath,
       loader: {
         includeDirs: [ join(process.cwd(), 'protocol') ],
@@ -100,4 +101,6 @@ export function getGRPCClientOption({ url, package: packageName, protoPath }: IG
   };
 }
 
-// ------------------------------ gRPC ------------------------------
+export interface IRequestHandler<T> {
+  (...args): Observable<T>;
+}

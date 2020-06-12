@@ -8,7 +8,7 @@ import { ConfigService } from '@Config/config.service';
 
 const { combine, printf } = format;
 
-export type ErrorType = Error | string | object;
+export type ErrorType = Error | string | unknown;
 
 const winstonLogger: WinstonLogger = createLogger({
   format: combine(

@@ -50,7 +50,7 @@ async function bootstrap(): Promise<void> {
     .setDescription(`${ process.env.npm_package_name } API`)
     .setVersion(process.env.npm_package_version)
     .build();
-  SwaggerModule.setup('api/swagger', app, SwaggerModule.createDocument(app, documentOptions));
+  SwaggerModule.setup('api/swagger', app, SwaggerModule.createDocument(     app, documentOptions));
 
   // -------------------------------- 启动及启动错误捕获 --------------------------------
   await app.listen(ConfigService.get('HTTP_PORT'));
@@ -59,7 +59,7 @@ async function bootstrap(): Promise<void> {
 
 // -------------------------------- 错误处理 --------------------------------
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', err        => {
   LogService.warn(err as Error);
 });
 

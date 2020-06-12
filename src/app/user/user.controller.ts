@@ -1,11 +1,10 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
 import { UserService } from '@App/user/user.service';
 import { ResponseSerialize } from '@Common/decorator/transform.decorator';
 import { UserCSRFTokenDto } from '@App/user/user.dto';
-import { Log } from '@Common/decorator/common.decorator';
-
 
 @Controller('v1/user')
 @ApiTags('user: 用户模块')
@@ -16,8 +15,7 @@ export class UserController {
   @Get('/csrf')
   @ResponseSerialize(UserCSRFTokenDto)
   @ApiOperation({ summary: '获取CSRF Token' })
-  @Log()
-  ShowCSRFToken(@Req() req): string {
+  ShowCSRFToken(@Req() req: Request): string {
     return req.csrfToken();
   }
 

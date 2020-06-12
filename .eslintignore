@@ -8,3 +8,5 @@
 
 protocol.js
 /**/*.js
+src/proto.ts
+example/grpc-server/proto.ts

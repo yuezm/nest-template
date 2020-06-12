@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 
 import {
-  getGRPCClientOption,
+  composeGRPCClientOption,
   isEmpty,
   isNotEmpty,
   transDateToDateString,
@@ -71,12 +71,12 @@ describe('Helper Test', () => {
     expect(transStringToJson('{"name":"Test"}')).toEqual({ name: 'Test' });
   });
 
-  test('Test getGRPCClientOption', () => {
+  test('Test composeGRPCClientOption', () => {
     const url = 'localhost:5000';
     const packageName = 'test';
     const protoPath = '/test';
 
-    const gRpcOptions: GrpcOptions = getGRPCClientOption({ url, package: packageName, protoPath });
+    const gRpcOptions: GrpcOptions = composeGRPCClientOption({ url, package: packageName, protoPath });
 
     expect(gRpcOptions.transport).toBe(Transport.GRPC);
     expect(gRpcOptions.options.url).toBe(url);

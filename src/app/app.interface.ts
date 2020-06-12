@@ -1,7 +1,6 @@
-import { Request } from 'express';
-
 // 返回值接口
-export interface IResponseInterceptor {
+export interface IResponse {
+  traceId?: string;
   errcode: number;
   errmsg?: string;
   data?: any;
@@ -14,8 +13,4 @@ export interface IUserInfo {
   name?: string;
 }
 
-// Request对象接口扩展
-export interface IRequest extends Request {
-  requestId: string;
-  userInfo?: IUserInfo;
-}
+

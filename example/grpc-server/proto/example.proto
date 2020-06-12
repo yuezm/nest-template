@@ -1,0 +1,15 @@
+syntax = "proto3";
+package example;
+
+message ExampleReq {
+    uint32 id = 1;
+}
+
+message ExampleRes {
+    uint32 id = 1;
+    string name = 2;
+}
+
+service ExampleService {
+    rpc SearchExample (ExampleReq) returns (ExampleRes);
+}

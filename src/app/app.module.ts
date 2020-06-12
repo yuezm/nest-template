@@ -4,14 +4,16 @@ import { APP_FILTER,  APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AllExceptionFilter } from '@Common/filter/all.exception.filter';
 import { ResponseInterceptor } from '@Common/interceptor/response.interceptor';
 
-import { LogMiddleWare } from '@Common/middware/log.middware';
+import { EntryMiddleWare } from '@Common/middware/entry.middware';
 
 import { UserModule } from './user/user.module';
+import { TestModule } from '@App/test/test.module';
 
 @Global()
 @Module({
   imports: [
     UserModule,
+    TestModule,
   ],
   providers: [
     // {
@@ -42,7 +44,7 @@ import { UserModule } from './user/user.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LogMiddleWare)
+    consumer.apply(EntryMiddleWare)
       .forRoutes('/');
   }
 }

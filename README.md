@@ -218,7 +218,7 @@ import { user } from '@Protocol/user.d.ts';
 
 传输 Request 实体原因:
 
-1. 调用日志打印必须存在 requestId，requestId 存在于 Request 对象，而 service 无法获取 Request 对象
+1. 调用日志打印必须存在 traceId，traceId 存在于 Request 对象，而 service 无法获取 Request 对象
 2. 日志打印时，会开启 DEBUG 判断，该参数从 query 传递，service 无法获取 query
 
 ```
@@ -309,9 +309,9 @@ LogService.info(xxx);
 
 线上日志默认关闭 DEBUG，只会打印服务的调用流程，而不会打印完整的信息，可以在 url 参数中加入**DEBUG=1** 开启 DEBUG 模式。_请注意，如果使用 `LogService.debug()` 时，请注意调用参数_
 
-#### requestId
+#### traceId
 
-requestId 做为用户调用的唯一标识，标识用户在整个系统中调用身份，由 _log.middware.ts_ 维护。打印调用日志时，请**务必打印 requestId，否则将无法知晓用户在系统中的调用过程**
+traceId 做为用户调用的唯一标识，标识用户在整个系统中调用身份，由 _log.middware.ts_ 维护。打印调用日志时，请**务必打印 traceId，否则将无法知晓用户在系统中的调用过程**
 
 **日志统一使用 _LogService_ 打印，线上代码不允许出现 _console.log_ !!!**
 

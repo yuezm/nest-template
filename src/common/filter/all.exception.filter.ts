@@ -1,19 +1,18 @@
 import { Catch, ArgumentsHost, HttpStatus, HttpException, BadRequestException } from '@nestjs/common';
 import { BaseRpcExceptionFilter } from '@nestjs/microservices';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import { LogService } from '@Log/log.service';
-import { IRequest } from '@App/app.interface';
 
 @Catch()
 export class AllExceptionFilter extends BaseRpcExceptionFilter {
-  catch(exception: any, host: ArgumentsHost): any {
+  catch(exception: Error, host: ArgumentsHost): any {
     super.catch(exception, host);
 
     const ctx: HttpArgumentsHost = host.switchToHttp();
+    const req: Request = ctx.getRequest();
     const res: Response = ctx.getResponse();
-    const req: IRequest = ctx.getRequest();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = '服务器错误';
@@ -28,9 +27,9 @@ export class AllExceptionFilter extends BaseRpcExceptionFilter {
         message = Array.isArray(messages) ? messages[ 0 ] : message;
       }
 
-      LogService.info(`HttpError: requestId=${ req.requestId }, Trace=${ exception.stack }`);
+      LogService.info(`HttpError: traceId=${ req.traceId }, Trace=${ exception.stack }`);
     } else {
-      LogService.warn(`Error: requestId=${ req.requestId }, Trace=${ exception.stack }`);
+      LogService.warn(`Error: traceId=${ req.traceId }, Trace=${ exception.stack }`);
     }
 
     res.status(200)

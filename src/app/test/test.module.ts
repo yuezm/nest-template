@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { TestController } from './test.controller';
 import { TestService } from './test.service';
-import { LogMiddleWare } from '@Common/middware/log.middware';
+import { EntryMiddleWare } from '@Common/middware/entry.middware';
 
 @Module({
   controllers: [ TestController ],
@@ -10,7 +10,7 @@ import { LogMiddleWare } from '@Common/middware/log.middware';
 })
 export class TestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LogMiddleWare)
+    consumer.apply(EntryMiddleWare)
       .forRoutes('/');
   }
 }

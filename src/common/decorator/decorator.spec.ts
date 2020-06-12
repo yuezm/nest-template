@@ -32,7 +32,7 @@ describe('Test common.decorator.ts', () => {
   });
 
   it('Test Log decorator normal', () => {
-    expect(test.test({ requestId: 'test_request_id' })).toBe(returnMsg);
+    expect(test.test({ traceId: 'test_request_id' })).toBe(returnMsg);
 
     expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [INFO] Enter Service.*$/.test(readFileLastLine(-2)));
     expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [INFO] Leave Service.*$/.test(readFileLastLine()));
@@ -45,20 +45,20 @@ describe('Test common.decorator.ts', () => {
   });
 
   it('Test Log decorator promise', () => {
-    test.testPromise({ requestId: 'test_request_id', query: { DEBUG: 1 } }).then(value => {
+    test.testPromise({ traceId: 'test_request_id', query: { DEBUG: 1 } }).then(value => {
       expect(value).toBe(returnMsg);
     });
 
-    expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [DEBUG] Leave Service : requestId: test_request_id; serviceName: Test.testPromise; response: "Hello Word!!!$/
+    expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [DEBUG] Leave Service : traceId: test_request_id; serviceName: Test.testPromise; response: "Hello Word!!!$/
       .test(readFileLastLine()));
   });
 
   it('Test Log decorator observable', () => {
-    test.testObservable({ requestId: 'test_request_id', query: { DEBUG: 1 } }).subscribe(value => {
+    test.testObservable({ traceId: 'test_request_id', query: { DEBUG: 1 } }).subscribe(value => {
       expect(value === 'Hello Word!!!');
     });
 
-    expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [DEBUG] Leave Service : requestId: test_request_id; serviceName: Test.Test.testObservable; response: "Hello Word!!!$/
+    expect(/^d{4}-d{2}-d{2} d{2}:d{2}:d{2} [DEBUG] Leave Service : traceId: test_request_id; serviceName: Test.Test.testObservable; response: "Hello Word!!!$/
       .test(readFileLastLine()));
   });
 });
