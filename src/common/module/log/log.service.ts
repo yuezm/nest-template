@@ -20,14 +20,14 @@ const winstonLogger: WinstonLogger = createLogger({
   transports: [
     // 控制台配置
     new transports.Console({
-      level: ConfigService.get('LOG_CMD_LEVEL'),
+      level: ConfigService.get('LOG_CMD_LEVEL') as string,
       handleExceptions: true,
     }),
 
     // 日志文件配置
     new DailyRotateFile({
-      level: ConfigService.get('LOG_FILE_LEVEL'),
-      filename: join(ConfigService.get('LOG_PATH'), '%DATE%.log'),
+      level: ConfigService.get('LOG_FILE_LEVEL') as string,
+      filename: join(ConfigService.get('LOG_PATH') as string, '%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       zippedArchive: false, // 是否压缩日志文件
       maxSize: '200m',

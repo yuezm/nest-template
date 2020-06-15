@@ -1,25 +1,23 @@
 import { Global, Logger, MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
-import { APP_FILTER,  APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { AllExceptionFilter } from '@Common/filter/all.exception.filter';
 import { ResponseInterceptor } from '@Common/interceptor/response.interceptor';
-
+import { AuthGuards } from '@Common/guards/auth.guards';
 import { EntryMiddleWare } from '@Common/middware/entry.middware';
 
 import { UserModule } from './user/user.module';
-import { TestModule } from '@App/test/test.module';
 
 @Global()
 @Module({
   imports: [
     UserModule,
-    TestModule,
   ],
-  providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuards,
-    // },
+providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuards,
+    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
@@ -39,8 +37,7 @@ import { TestModule } from '@App/test/test.module';
       useClass: AllExceptionFilter,
     },
   ],
-  exports: [
-  ],
+  exports: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

@@ -4,7 +4,7 @@ import * as dayJs from 'dayjs';
 
 import { IGRPCClientOptions } from './helper.interface';
 
-import { Observable } from 'rxjs';
+
 
 
 // -------------------------------------- 通用 --------------------------------------
@@ -99,8 +99,4 @@ export function composeGRPCClientOption({ url, package: _package, protoPath }: I
       },
     },
   };
-}
-
-export interface IRequestHandler<T> {
-  (...args): Observable<T>;
 }

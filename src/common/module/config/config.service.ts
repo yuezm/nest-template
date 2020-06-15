@@ -10,16 +10,18 @@ import { parse } from 'dotenv';
 
 import defaultConfig from '@Src/config';
 
+export type TConfig = typeof defaultConfig | typeof process.env;
+
 const envPath = join(process.cwd(), '.env');
-const config: unknown = existsSync(envPath) ? Object.assign(defaultConfig, parse(readFileSync(envPath))) : defaultConfig;
+const config: TConfig = existsSync(envPath) ? Object.assign(defaultConfig, parse(readFileSync(envPath))) : defaultConfig;
 
 @Injectable()
 export class ConfigService {
-  get(key: string): string {
+  get(key: string): string | number {
     return ConfigService.get(key);
   }
 
-  static get(key: string): string {
+  static get(key: string): string | number {
     return config.hasOwnProperty(key) ? config[ key ] : process.env[ key ];
   }
 }
