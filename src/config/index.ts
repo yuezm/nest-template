@@ -1,7 +1,7 @@
 const NODE_ENV = process.env.NODE_ENV;
 
 export default {
-  LOG_PATH: './logs',
+  LOG_PATH: process.env.LOG_PATH || './logs',
   HTTP_PORT: NODE_ENV === 'production' ? 8080 : 7001,
   RPC_PORT: 8000,
 

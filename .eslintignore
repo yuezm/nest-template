@@ -9,4 +9,5 @@
 protocol.js
 /**/*.js
 src/proto.ts
+src/proto.d.ts
 example/grpc-server/proto.ts
