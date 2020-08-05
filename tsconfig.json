@@ -25,8 +25,8 @@
       "@Common/*": [
         "./src/common/*"
       ],
-      "@Protocol/*": [
-        "./protocol/*"
+      "@Proto/*": [
+        "./proto/*"
       ],
       "@Resource/*": [
         "./resource/*"

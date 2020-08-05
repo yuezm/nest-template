@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "build:protocol": "rxjs-grpc -o src/proto.ts proto/**/*.proto",
+    "build:protocol": "rxjs-grpc -o example/grpc-server/src/proto.d.ts proto/**/*.proto",
     "build:docker": "docker build -t $npm_package_name:$npm_package_version .",
     "startup:docker": "pm2-docker start startup.json --env production",
     "dev": "nest start --watch",
@@ -72,7 +72,6 @@
     "ora": "^4.0.3",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
-    "rxjs-grpc": "^0.2.5",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.0",
     "ts-loader": "^6.2.1",
@@ -97,7 +96,7 @@
       "^@App/(.*)": "<rootDir>/src/app/$1",
       "^@Helper/(.*)": "<rootDir>/src/helper/$1",
       "^@Common/(.*)": "<rootDir>/src/common/$1",
-      "^@Protocol/(.*)": "<rootDir>/protocol/$1",
+      "^@Proto/(.*)": "<rootDir>/proto/$1",
       "^@Resource/(.*)": "<rootDir>/resource/$1",
       "^@Log/(.*)": "<rootDir>/src/common/module/log/$1",
       "^@Config/(.*)": "<rootDir>/src/common/module/config/$1"
